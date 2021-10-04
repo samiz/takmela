@@ -1,0 +1,170 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>Understanding the Takmela trace sheets</title>
+<link rel="stylesheet" href="common.css">
+<link rel="stylesheet" href="dom.css">
+<style>
+.imgDiv
+{
+    padding:5px;
+    border:2px inset gray;
+    border-radius:4px;
+}
+
+#labelsTable
+{ 
+    border:1px solid gray; 
+}
+
+#labelsTable td 
+{ 
+    padding: 10px;
+    border:none;
+}
+
+#labelsTable td span
+{
+    display: inline-block;
+    padding:3px;
+}
+
+span.labelSummary
+{
+    display:block;
+    margin-bottom:1em;
+}
+
+span.labelSummaryExplanation
+{
+    display:inline-block;
+    margin-left:2em;
+}
+
+</style>
+</head>
+<body>
+
+<div class="topNav">
+<a href="./index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1>Understanding the Takmela trace sheets</h1>
+
+<p>Do the traces look confusing? This guide will hopefully help you make sense of them, and help you further internalize the algorithm itself.</p>
+
+<p><b>Summary:</b></p>
+<ul>
+<li>Takmela's algorithm runs in iterations, each composed of steps ; the trace is similarly divided into iterations</li>
+<li>A step is either the initial root call or a join</li>
+<li>Each step has its process tree (depicted on the right), and in this process tree each operation is either trivial (e.g matching terminals), a success, or calling a sub-rule</li>
+<li>Calling a subrule means adding a continuation, then processing what it can of the callee (in a subtree), then stopping</li>
+<li>The graph diagram represents the GSS (the K and newK tables), new continuations are shown in red</li>
+<li>The pane below the graph does the same for S and newS, the success/memoization table</li>
+</ul>
+
+<p><b>Worklist labels summary</b></p>
+<div class="takmelaLabelsExplanation">
+<span class="labelSummary"><span class="activeSuccess">jS</span><span class="labelSummaryExplanation">JoinS: New Success (from worklist) joins new or existing continuation</span></span>
+<span class="labelSummary"><span class="activeNewCall">jK</span><span class="labelSummaryExplanation">JoinK: New Continuation joins new or existing success</span></span>
+<span class="labelSummary"><span class="usedNewCall">S⤚</span><span class="labelSummaryExplanation">This continuation is the other participant of a JoinS</span></span>
+<span class="labelSummary"><span class="usedSuccess">⤙K</span><span class="labelSummaryExplanation">This success is the other participant of a JoinK (you shouldn't see this in the current traces)</span></span>
+<span class="labelSummary"><span class="idleSuccess">nJ</span><span class="labelSummaryExplanation">This worklist item does not participate in any join during this iteration</span></span>
+<span class="labelSummary"><span class="failedMatchSuccess">F</span><span class="labelSummaryExplanation">(Datalog only) This worklist item tried to participate in a join but matching variables failed</span></span>
+</div>
+<hr style="border:1px solid;">
+
+<p>The running of a Takmela program (parsing or Datalog) happens in <i>iterations</i>, each of them composed of a series of <i>steps</i>.</p>
+<pre>
+K = {} ; newK = {} ; S = {} ; newS = {} ; awakenings = {}
+callRootRule() 
+while(true)
+{
+    kWorklist = diff(newK, K)
+    sWorklist = diff(newS, S)
+    
+    if(kWorklist.size == 0 && sWorklist.size == 0) { break }     
+
+    newK.clear() ; newS.clear()
+    K = merge(kWorklist, K)
+    S = merge(sWorklist, S)
+    awakenings.clear()
+    
+    joinNewContinuationsWithPastSuccesses(kWorklist, S)
+    joinNewSuccessesWithPastContinuations(sWorklist, K)
+}
+</pre>
+<p>The 'zeroth' iteration happens before the while loop, and the only step therein is calling the root rule. Calling the root rule seeds the rest of the iterations since it can produce new successes (thus adding items to the <span class="snippet">sWorkList</span>) or produce new calls and their continuations (adding items to <span class="snippet">kWorkList</span>).
+<div class="imgDiv"><img src="./img/trace_overview.png" style="max-width:1200px;"></div>
+<p>The first section shows the <span class="snippet">sWorklist</span> and <span class="snippet">kWorklist</span>, this is important since these worklists determine how the algorithm will go forward in the current iteration (and the algorithm will end when these worklists are empty).</p>
+
+<p>Worklist items (new successes and continuations) move processing forward when they <i>join</i> with other items; a new success can join with a new or existing continuation, and a new continuation can do the same with successes.</p><p>The join criteria is the caller/callee relationship: if a new success represents the call <span class="snippet">a/5</span>, and the K (continuations) table has an entry <span class="snippet">a/5 → (r/3 ; r → b a • c)</span>, then these two can join together to resume processing of the rule <span class="snippet">r</span> from the specified code point. New continuations can make use of new/existing successes in the same way. The <span class="snippet">awakenings</span> table is there to prevent the criss-cross problem where a new success and a new continuation join each other twice.</p>
+
+<p>When a success joins a new or existing continuation, we call it a <i>JoinS</i>, and inversly when a new continuation joins a new or existing success, we call it a <i>JoinK</i></p>
+
+<p>The trace uses labels to show how worklist items join together, as explained below:</p>
+<div class="takmelaLabelsExplanation">
+<table id="labelsTable">
+<tr>
+    <td>
+        <span class="activeSuccess">jS</span>
+    </td>
+    <td>This new success joins a continuation (JoinS).</td>
+</tr>
+
+<tr>
+    <td>
+        <span class="activeNewCall">jK</span>
+    </td>
+    <td>This new continuation joins a success (JoinK).</td>
+</tr>
+
+<tr>
+    <td>
+        <span class="usedNewCall">S⤚</span>
+    </td>
+    <td>This continuation will be joined by a new success (thus becoming the other participant in JoinS).</td>
+</tr>
+
+<tr>
+    <td>
+        <span class="usedSuccess">⤙K</span>
+    </td>
+    <td>This success will be joined by a new continuation (becoming the other participant in JoinK); should not be found in the wild unless the algorithm changes, due to <i>awakenings</i>.</td>
+</tr>
+
+<tr>
+    <td>
+        <span class="idleSuccess">nJ</span>
+    </td>
+    <td>This worklist item does not participate in any join during this iteration.</td>
+</tr>
+
+<tr>
+    <td>
+        <span class="failedMatchSuccess">F</span>
+    </td>
+    <td>(Datalog only) This worklist item tried to participate in a join but matching variables failed.</td>
+</tr>
+
+</table>
+</div>
+
+<h2>Processing trees</h2>
+<div class="imgDiv"><img src="./img/trace_processTree.png" style="display:block;margin-left:auto; margin-right:auto; max-width:1200px;"></div>
+<p>Inside each step, the algorithm <i>processes</i> a rule's contents. Suppose the algorithm was resuming a continuation such as <span class="snippet">(r/3 ; r → b a • '+' c  d)</span> : here's what would happen</p>
+<ol>
+<li>Operations like matching the <span class="snippet">'+'</span> are trivial; the algorithm will perform them and move to the next operation if the match succeeds (comparisons in Datalog are similarly handled).</li>
+<li>If <span class="snippet">process</span> found it has reached the end of a rule body (not depicted here!), it adds a new success and stops.</li>
+<li>What happens when the algorithm encounters a call, like the call to <span class="snippet">c</span>?
+<ol>
+    <li>It adds a new continuation to resume from, in our case it would be <span class="snippet">(r/3 ; r → b a '+' c • d)</span></li>
+    <li>It invokes <span class="snippet">process</span> on each of the callee's alternatives (unless the same call was already processed at this input position)</li>
+    <li>It does not process any further elements in this rule body until the continuation is resumed</li>
+</ol>
+</li>
+</ol>
+<p>Interestingly, while the call to <span class="snippet">process</span> is recursive, it doesn't have to be. This isn't the dynamic, unbounded recursion that needs a runtime stack; and a code generator could analyze the grammar and generate a specialized, non-recursive <span class="snippet">processRuleXyz(..)</span> function for each of the grammar's nonterminals.</p>
+
+</body>
+</html>

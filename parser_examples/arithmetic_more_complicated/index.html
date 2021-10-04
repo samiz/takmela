@@ -1,0 +1,936 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>Takmela: Parsing arithmetic expression example (more complicated expressions)</title>
+<link rel="stylesheet" href="../../common.css">
+<link rel="stylesheet" href="../../dom.css">
+<script src="../../dom.js"></script>
+</head>
+<body>
+
+<div class="topNav">
+<a href="../../index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1>Takmela: Parsing arithmetic expression example (more complicated expressions)</h1>
+<p>Arithmetic expression again, but something more complicated than 1+2+3; more resembling e.g expressions in programming languages.</p>
+<span class="section">Grammar</span>
+<pre>
+e : e '+' t 
+    | t ;
+    
+t : t '*' f 
+    | f ;
+        
+f : 
+      NUM
+    | ID
+    | '(' e ')'
+    | ID '(' e ')'
+    ;
+    
+ID:  [a-zA-Z]+;
+NUM: [0-9]+;
+
+WS skip: [ \r\n\t]*;
+</pre>
+<span class="section">Input</span>
+<pre>
+1+f(5+x)
+</pre>
+<p class="traceHintMessage">Trace appears confusing? <a href="../../trace_legend.html">This</a> might help</p>
+<div class="takmela-trace">
+<table>
+<tr><td colspan="2" class="iterationHeader">Call start nonterminal </span></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace000.png"></td><td rowspan="2">
+<div><div class="step">#0: Called <span class="snippet">e/0</span> at the top level (will process)</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e → • e `+` t</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">e/0</span> with Cont <span class="snippet">e/0 ; e →  e• `+` t ; e</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e → • t</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">t/0</span> with Cont <span class="snippet">e/0 ; e →  t• ; e</span> [will process]
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">t/0</span> codePos <span class="snippet">t → • t `*` f</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">t/0</span> with Cont <span class="snippet">t/0 ; t →  t• `*` f ; t</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">t/0</span> codePos <span class="snippet">t → • f</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">f/0</span> with Cont <span class="snippet">t/0 ; t →  f• ; t</span> [will process]
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/0</span> codePos <span class="snippet">f → • NUM</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">1</span>, matched; inputPos now <span class="snippet">1</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">f/0 → 1</span>
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/0</span> codePos <span class="snippet">f → • ID</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">1</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/0</span> codePos <span class="snippet">f → • `(` e `)`</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Match <span class="snippet">`(`</span> to <span class="snippet">1</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/0</span> codePos <span class="snippet">f → • ID `(` e `)`</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">1</span>, fail
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+New continuations:<hr style="border:1px dotted black">
+<div><span class="snippet">f/0</span> → <span class="snippet">t/0 ; t →  f• </span></div>
+<div><span class="snippet">e/0</span> → <span class="snippet">e/0 ; e →  e• `+` t </span></div>
+<div><span class="snippet">t/0</span> → <span class="snippet">t/0 ; t →  t• `*` f </span></div>
+<div><span class="snippet">t/0</span> → <span class="snippet">e/0 ; e →  t• </span></div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="new-success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 0</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">f/0  → 1 <span class="forest"><span class="treeSep">木</span>f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">f/0</span> → <span class="snippet">t/0 ; t →  f• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">e/0</span> → <span class="snippet">e/0 ; e →  e• `+` t </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/0</span> → <span class="snippet">t/0 ; t →  t• `*` f </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/0</span> → <span class="snippet">e/0 ; e →  t• </span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace001.png"></td><td rowspan="2">
+<div><div class="step">#1: JoinS: <span class="snippet">f/0  → 1 (1木)</span> will resume cont: <span class="snippet">t/0 ; t →  f• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/0</span> codePos <span class="snippet">t →  f•</span> inputPos <span class="snippet">1</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">t/0 → 1</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 1</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">t/0  → 1 <span class="forest"><span class="treeSep">木</span>t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace002.png"></td><td rowspan="2">
+<div><div class="step">#2: JoinS: <span class="snippet">t/0  → 1 (1木)</span> will resume cont: <span class="snippet">t/0 ; t →  t• `*` f </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/0</span> codePos <span class="snippet">t →  t• `*` f</span> inputPos <span class="snippet">1</span></div>
+<div class="processingOp">
+Match <span class="snippet">`*`</span> to <span class="snippet">+</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace003.png"></td><td rowspan="2">
+<div><div class="step">#3: JoinS: <span class="snippet">t/0  → 1 (1木)</span> will resume cont: <span class="snippet">e/0 ; e →  t• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e →  t•</span> inputPos <span class="snippet">1</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">e/0 → 1</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 2</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">e/0  → 1 <span class="forest"><span class="treeSep">木</span>e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace004.png"></td><td rowspan="2">
+<div><div class="step">#4: JoinS: <span class="snippet">e/0  → 1 (1木)</span> will resume cont: <span class="snippet">Root/0 ; Root →  e• </span></div>
+<span class="cross">×</span>Didn't reach end of input, not a successful parse
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace005.png"></td><td rowspan="2">
+<div><div class="step">#5: JoinS: <span class="snippet">e/0  → 1 (1木)</span> will resume cont: <span class="snippet">e/0 ; e →  e• `+` t </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e →  e• `+` t</span> inputPos <span class="snippet">1</span></div>
+<div class="processingOp">
+Match <span class="snippet">+</span> to <span class="snippet">+</span>, matched; inputPos now <span class="snippet">2</span>
+</div>
+<div class="processingOp">
+Calling: <span class="snippet">t/2</span> with Cont <span class="snippet">e/0 ; e →  e `+` t• ; e(e(t(f('1'))), '+')</span> [will process]
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">t/2</span> codePos <span class="snippet">t → • t `*` f</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">t/2</span> with Cont <span class="snippet">t/2 ; t →  t• `*` f ; t</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">t/2</span> codePos <span class="snippet">t → • f</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">f/2</span> with Cont <span class="snippet">t/2 ; t →  f• ; t</span> [will process]
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/2</span> codePos <span class="snippet">f → • NUM</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">f</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/2</span> codePos <span class="snippet">f → • ID</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">f</span>, matched; inputPos now <span class="snippet">3</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">f/2 → 3</span>
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/2</span> codePos <span class="snippet">f → • `(` e `)`</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Match <span class="snippet">`(`</span> to <span class="snippet">f</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/2</span> codePos <span class="snippet">f → • ID `(` e `)`</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">f</span>, matched; inputPos now <span class="snippet">3</span>
+</div>
+<div class="processingOp">
+Match <span class="snippet">(</span> to <span class="snippet">(</span>, matched; inputPos now <span class="snippet">4</span>
+</div>
+<div class="processingOp">
+Calling: <span class="snippet">e/4</span> with Cont <span class="snippet">f/2 ; f →  ID `(` e• `)` ; f('f', '(')</span> [will process]
+<div class="processing" style="margin-left:60px;">
+<div class="processingHeader">Processing <span class="snippet">e/4</span> codePos <span class="snippet">e → • e `+` t</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">e/4</span> with Cont <span class="snippet">e/4 ; e →  e• `+` t ; e</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:60px;">
+<div class="processingHeader">Processing <span class="snippet">e/4</span> codePos <span class="snippet">e → • t</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">t/4</span> with Cont <span class="snippet">e/4 ; e →  t• ; e</span> [will process]
+<div class="processing" style="margin-left:80px;">
+<div class="processingHeader">Processing <span class="snippet">t/4</span> codePos <span class="snippet">t → • t `*` f</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">t/4</span> with Cont <span class="snippet">t/4 ; t →  t• `*` f ; t</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:80px;">
+<div class="processingHeader">Processing <span class="snippet">t/4</span> codePos <span class="snippet">t → • f</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">f/4</span> with Cont <span class="snippet">t/4 ; t →  f• ; t</span> [will process]
+<div class="processing" style="margin-left:100px;">
+<div class="processingHeader">Processing <span class="snippet">f/4</span> codePos <span class="snippet">f → • NUM</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">5</span>, matched; inputPos now <span class="snippet">5</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">f/4 → 5</span>
+</div>
+</div>
+<div class="processing" style="margin-left:100px;">
+<div class="processingHeader">Processing <span class="snippet">f/4</span> codePos <span class="snippet">f → • ID</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">5</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:100px;">
+<div class="processingHeader">Processing <span class="snippet">f/4</span> codePos <span class="snippet">f → • `(` e `)`</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Match <span class="snippet">`(`</span> to <span class="snippet">5</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:100px;">
+<div class="processingHeader">Processing <span class="snippet">f/4</span> codePos <span class="snippet">f → • ID `(` e `)`</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">5</span>, fail
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+New continuations:<hr style="border:1px dotted black">
+<div><span class="snippet">e/4</span> → <span class="snippet">e/4 ; e →  e• `+` t </span></div>
+<div><span class="snippet">e/4</span> → <span class="snippet">f/2 ; f →  ID `(` e• `)` </span></div>
+<div><span class="snippet">t/4</span> → <span class="snippet">e/4 ; e →  t• </span></div>
+<div><span class="snippet">t/4</span> → <span class="snippet">t/4 ; t →  t• `*` f </span></div>
+<div><span class="snippet">f/2</span> → <span class="snippet">t/2 ; t →  f• </span></div>
+<div><span class="snippet">t/2</span> → <span class="snippet">e/0 ; e →  e `+` t• </span></div>
+<div><span class="snippet">t/2</span> → <span class="snippet">t/2 ; t →  t• `*` f </span></div>
+<div><span class="snippet">f/4</span> → <span class="snippet">t/4 ; t →  f• </span></div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 3</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">f/2  → 3 <span class="forest"><span class="treeSep">木</span>f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span></span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">f/4  → 5 <span class="forest"><span class="treeSep">木</span>f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">e/4</span> → <span class="snippet">e/4 ; e →  e• `+` t </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">e/4</span> → <span class="snippet">f/2 ; f →  ID `(` e• `)` </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/4</span> → <span class="snippet">e/4 ; e →  t• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/4</span> → <span class="snippet">t/4 ; t →  t• `*` f </span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">f/2</span> → <span class="snippet">t/2 ; t →  f• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/2</span> → <span class="snippet">e/0 ; e →  e `+` t• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/2</span> → <span class="snippet">t/2 ; t →  t• `*` f </span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">f/4</span> → <span class="snippet">t/4 ; t →  f• </span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace006.png"></td><td rowspan="2">
+<div><div class="step">#6: JoinS: <span class="snippet">f/2  → 3 (1木)</span> will resume cont: <span class="snippet">t/2 ; t →  f• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/2</span> codePos <span class="snippet">t →  f•</span> inputPos <span class="snippet">3</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">t/2 → 3</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace007.png"></td><td rowspan="2">
+<div><div class="step">#7: JoinS: <span class="snippet">f/4  → 5 (1木)</span> will resume cont: <span class="snippet">t/4 ; t →  f• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/4</span> codePos <span class="snippet">t →  f•</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">t/4 → 5</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 4</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">t/4  → 5 <span class="forest"><span class="treeSep">木</span>t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">t/2  → 3 <span class="forest"><span class="treeSep">木</span>t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace008.png"></td><td rowspan="2">
+<div><div class="step">#8: JoinS: <span class="snippet">t/4  → 5 (1木)</span> will resume cont: <span class="snippet">e/4 ; e →  t• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/4</span> codePos <span class="snippet">e →  t•</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">e/4 → 5</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace009.png"></td><td rowspan="2">
+<div><div class="step">#9: JoinS: <span class="snippet">t/4  → 5 (1木)</span> will resume cont: <span class="snippet">t/4 ; t →  t• `*` f </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/4</span> codePos <span class="snippet">t →  t• `*` f</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Match <span class="snippet">`*`</span> to <span class="snippet">+</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace010.png"></td><td rowspan="2">
+<div><div class="step">#10: JoinS: <span class="snippet">t/2  → 3 (1木)</span> will resume cont: <span class="snippet">e/0 ; e →  e `+` t• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e →  e `+` t•</span> inputPos <span class="snippet">3</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">e/0 → 3</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace011.png"></td><td rowspan="2">
+<div><div class="step">#11: JoinS: <span class="snippet">t/2  → 3 (1木)</span> will resume cont: <span class="snippet">t/2 ; t →  t• `*` f </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/2</span> codePos <span class="snippet">t →  t• `*` f</span> inputPos <span class="snippet">3</span></div>
+<div class="processingOp">
+Match <span class="snippet">`*`</span> to <span class="snippet">(</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 5</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">e/4  → 5 <span class="forest"><span class="treeSep">木</span>e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">e/0  → 3 <span class="forest"><span class="treeSep">木</span>e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace012.png"></td><td rowspan="2">
+<div><div class="step">#12: JoinS: <span class="snippet">e/4  → 5 (1木)</span> will resume cont: <span class="snippet">e/4 ; e →  e• `+` t </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/4</span> codePos <span class="snippet">e →  e• `+` t</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Match <span class="snippet">+</span> to <span class="snippet">+</span>, matched; inputPos now <span class="snippet">6</span>
+</div>
+<div class="processingOp">
+Calling: <span class="snippet">t/6</span> with Cont <span class="snippet">e/4 ; e →  e `+` t• ; e(e(t(f('5'))), '+')</span> [will process]
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">t/6</span> codePos <span class="snippet">t → • t `*` f</span> inputPos <span class="snippet">6</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">t/6</span> with Cont <span class="snippet">t/6 ; t →  t• `*` f ; t</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">t/6</span> codePos <span class="snippet">t → • f</span> inputPos <span class="snippet">6</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">f/6</span> with Cont <span class="snippet">t/6 ; t →  f• ; t</span> [will process]
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/6</span> codePos <span class="snippet">f → • NUM</span> inputPos <span class="snippet">6</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">x</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/6</span> codePos <span class="snippet">f → • ID</span> inputPos <span class="snippet">6</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">x</span>, matched; inputPos now <span class="snippet">7</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">f/6 → 7</span>
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/6</span> codePos <span class="snippet">f → • `(` e `)`</span> inputPos <span class="snippet">6</span></div>
+<div class="processingOp">
+Match <span class="snippet">`(`</span> to <span class="snippet">x</span>, fail
+</div>
+</div>
+<div class="processing" style="margin-left:40px;">
+<div class="processingHeader">Processing <span class="snippet">f/6</span> codePos <span class="snippet">f → • ID `(` e `)`</span> inputPos <span class="snippet">6</span></div>
+<div class="processingOp">
+Match <span class="snippet">ID</span> to <span class="snippet">x</span>, matched; inputPos now <span class="snippet">7</span>
+</div>
+<div class="processingOp">
+Match <span class="snippet">`(`</span> to <span class="snippet">)</span>, fail
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+New continuations:<hr style="border:1px dotted black">
+<div><span class="snippet">f/6</span> → <span class="snippet">t/6 ; t →  f• </span></div>
+<div><span class="snippet">t/6</span> → <span class="snippet">e/4 ; e →  e `+` t• </span></div>
+<div><span class="snippet">t/6</span> → <span class="snippet">t/6 ; t →  t• `*` f </span></div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace013.png"></td><td rowspan="2">
+<div><div class="step">#13: JoinS: <span class="snippet">e/4  → 5 (1木)</span> will resume cont: <span class="snippet">f/2 ; f →  ID `(` e• `)` </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">f/2</span> codePos <span class="snippet">f →  ID `(` e• `)`</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Match <span class="snippet">`)`</span> to <span class="snippet">+</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace014.png"></td><td rowspan="2">
+<div><div class="step">#14: JoinS: <span class="snippet">e/0  → 3 (1木)</span> will resume cont: <span class="snippet">Root/0 ; Root →  e• </span></div>
+<span class="cross">×</span>Didn't reach end of input, not a successful parse
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace015.png"></td><td rowspan="2">
+<div><div class="step">#15: JoinS: <span class="snippet">e/0  → 3 (1木)</span> will resume cont: <span class="snippet">e/0 ; e →  e• `+` t </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e →  e• `+` t</span> inputPos <span class="snippet">3</span></div>
+<div class="processingOp">
+Match <span class="snippet">`+`</span> to <span class="snippet">(</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 6</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">f/6  → 7 <span class="forest"><span class="treeSep">木</span>f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">f/6</span> → <span class="snippet">t/6 ; t →  f• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/6</span> → <span class="snippet">e/4 ; e →  e `+` t• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">t/6</span> → <span class="snippet">t/6 ; t →  t• `*` f </span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace016.png"></td><td rowspan="2">
+<div><div class="step">#16: JoinS: <span class="snippet">f/6  → 7 (1木)</span> will resume cont: <span class="snippet">t/6 ; t →  f• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/6</span> codePos <span class="snippet">t →  f•</span> inputPos <span class="snippet">7</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">t/6 → 7</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 7</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">t/6  → 7 <span class="forest"><span class="treeSep">木</span>t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace017.png"></td><td rowspan="2">
+<div><div class="step">#17: JoinS: <span class="snippet">t/6  → 7 (1木)</span> will resume cont: <span class="snippet">e/4 ; e →  e `+` t• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/4</span> codePos <span class="snippet">e →  e `+` t•</span> inputPos <span class="snippet">7</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">e/4 → 7</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace018.png"></td><td rowspan="2">
+<div><div class="step">#18: JoinS: <span class="snippet">t/6  → 7 (1木)</span> will resume cont: <span class="snippet">t/6 ; t →  t• `*` f </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/6</span> codePos <span class="snippet">t →  t• `*` f</span> inputPos <span class="snippet">7</span></div>
+<div class="processingOp">
+Match <span class="snippet">`*`</span> to <span class="snippet">)</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 8</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">e/4  → 7 <span class="forest"><span class="treeSep">木</span>e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace019.png"></td><td rowspan="2">
+<div><div class="step">#19: JoinS: <span class="snippet">e/4  → 7 (1木)</span> will resume cont: <span class="snippet">e/4 ; e →  e• `+` t </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/4</span> codePos <span class="snippet">e →  e• `+` t</span> inputPos <span class="snippet">7</span></div>
+<div class="processingOp">
+Match <span class="snippet">`+`</span> to <span class="snippet">)</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace020.png"></td><td rowspan="2">
+<div><div class="step">#20: JoinS: <span class="snippet">e/4  → 7 (1木)</span> will resume cont: <span class="snippet">f/2 ; f →  ID `(` e• `)` </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">f/2</span> codePos <span class="snippet">f →  ID `(` e• `)`</span> inputPos <span class="snippet">7</span></div>
+<div class="processingOp">
+Match <span class="snippet">)</span> to <span class="snippet">)</span>, matched; inputPos now <span class="snippet">8</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">f/2 → 8</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">f/2 → 8, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 9</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">f/2  → 8 <span class="forest"><span class="treeSep">木</span>f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace021.png"></td><td rowspan="2">
+<div><div class="step">#21: JoinS: <span class="snippet">f/2  → 8 (1木)</span> will resume cont: <span class="snippet">t/2 ; t →  f• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/2</span> codePos <span class="snippet">t →  f•</span> inputPos <span class="snippet">8</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">t/2 → 8</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 8, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">t/2 → 8, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'5'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'x'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,')'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 10</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">t/2  → 8 <span class="forest"><span class="treeSep">木</span>t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'5'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'x'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,')'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace022.png"></td><td rowspan="2">
+<div><div class="step">#22: JoinS: <span class="snippet">t/2  → 8 (1木)</span> will resume cont: <span class="snippet">e/0 ; e →  e `+` t• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e →  e `+` t•</span> inputPos <span class="snippet">8</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">e/0 → 8</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 8, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 8, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'5'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'x'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,')'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">e/0 → 8, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'5'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'x'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,')'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace023.png"></td><td rowspan="2">
+<div><div class="step">#23: JoinS: <span class="snippet">t/2  → 8 (1木)</span> will resume cont: <span class="snippet">t/2 ; t →  t• `*` f </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">t/2</span> codePos <span class="snippet">t →  t• `*` f</span> inputPos <span class="snippet">8</span></div>
+<div class="processingOp">
+Match <span class="snippet">`*`</span> to <span class="snippet">(eof)</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 8, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 8, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'5'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'x'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,')'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 8, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'5'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'x'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,')'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 11</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">e/0  → 8 <span class="forest"><span class="treeSep">木</span>e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'5'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'x'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,')'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace024.png"></td><td rowspan="2">
+<div><div class="step">#24: JoinS: <span class="snippet">e/0  → 8 (1木)</span> will resume cont: <span class="snippet">Root/0 ; Root →  e• </span></div>
+<span class="tick">✓</span>Reached end of input, successful parse!
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 8, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 8, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'5'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'x'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,')'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 8, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'5'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'x'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,')'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">Root/0 → 8, Root<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'1'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-7">(</span>'5'<span class="close-rainbow-7">)</span></span><span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'x'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,')'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span><span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace025.png"></td><td rowspan="2">
+<div><div class="step">#25: JoinS: <span class="snippet">e/0  → 8 (1木)</span> will resume cont: <span class="snippet">e/0 ; e →  e• `+` t </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">e/0</span> codePos <span class="snippet">e →  e• `+` t</span> inputPos <span class="snippet">8</span></div>
+<div class="processingOp">
+Match <span class="snippet">`+`</span> to <span class="snippet">(eof)</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">f/0 → 1, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/0 → 1, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 1, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 3, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/4 → 5, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'5'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 3, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/4 → 5, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'5'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 5, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'5'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 3, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/6 → 7, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'x'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/6 → 7, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'x'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/4 → 7, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'5'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'x'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">f/2 → 8, f<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'5'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'x'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,')'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">t/2 → 8, t<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'5'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'x'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,')'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">e/0 → 8, e<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'5'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>'x'<span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,')'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">Root/0 → 8, Root<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'1'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-7">(</span>'5'<span class="close-rainbow-7">)</span></span><span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'x'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,')'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span><span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 12</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root/0  → 8 <span class="forest"><span class="treeSep">木</span>Root<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'1'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'f','(',e<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>e<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>t<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-7">(</span>'5'<span class="close-rainbow-7">)</span></span><span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span>,'+',t<span class="rainbow-nodepth"><span class="open-rainbow-5">(</span>f<span class="rainbow-nodepth"><span class="open-rainbow-6">(</span>'x'<span class="close-rainbow-6">)</span></span><span class="close-rainbow-5">)</span></span><span class="close-rainbow-4">)</span></span>,')'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr><td>(No new calls or successes that can be further processed)</td></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 13  [Fixed point reached]</span></td></tr>
+</table>
+</div>
+
+</body>
+</html>

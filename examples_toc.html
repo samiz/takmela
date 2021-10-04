@@ -1,0 +1,94 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>List of Takmela examples</title>
+<link rel="stylesheet" href="common.css">
+<style>
+    .example-box
+    {
+        display: inline-block;
+        width:28%;
+        text-align:top;
+    }
+    .examples-container
+    {
+        display:flex;
+    }
+</style>
+</head>
+<body>
+
+<div class="topNav">
+<a href="./index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+<h1>List of Takmela examples</h1>
+<p>The <a href="https://github.com/samiz/TakmelaDemo">TakmelaDemo</a> code comes with various examples with their traces, which you can find on this page.</p>
+
+<p>The examples also show their output normally to stdout, so you don't need to follow the traces if you want to quickly check them out</p>
+
+<h2>Parser examples</h2>
+<div class="examples-container">
+    <div class="example-box">
+    <h3>Arithmetic expressions</h3>
+    A classic example for context-free grammars. Shows how Takmela deals with left-recursion.
+    <h4>1+2</h4>
+    <p>A very basic and easy to follow <a href="./parser_examples/arith_one_plus_two/index.html">example</a>, as presented in the <a href="./takmela_article.html">main article</a>.
+    <h4>1+2+3</h4>
+    <p>A slightly more complicated example <a href="./parser_examples/arith_one_plus_two_plus_three/index.html">showing</a> how Takmela can resume the same continuation more than once.
+    <h4>1+2+3 (with ambuiguity)</h4>
+    <p>A classic <a href="./parser_examples/arith_one_plus_two_plus_three_ambig/index.html">example</a> showing ambiguity.</p>
+    </div>
+    <div class="example-box">
+     <h3>Arithmetic expressions (2)</h3>
+    <h4>Complicated expressions</h4>
+    <p>A more fully fleshed-out grammar for arithmetic expressions, somewhat harder to <a href="./parser_examples/arithmetic_more_complicated/index.html">trace</a> though!</p>
+    <h4>Complicated expressions with ambiguity</h4>
+    <p>More complicated grammar <a href="./parser_examples/arith_ambig_complicated/index.html">example</a> with deliberate ambiguity introduced</p>
+    </div>
+    <div class="example-box">
+    <h3>Nullable nonterminal example</h3>
+    An example of a known bug in the initial version of Earley's parsing algorithm (fixed in later iterations). How does Takmela deal with this special case?
+    <p><a href="./parser_examples/nullable_nonterminal_bug_simple/index.html">Simplified version</a></p>
+    <p><a href="./parser_examples/nullable_nonterminal_bug/index.html">Full version</a></p>
+    </div>
+    <div class="example-box">
+    <h3>More Left-recursion examples</h3>
+    <h4>Indirect left recursion</h4>
+    <a href="./parser_examples/left_recursion_indirect/index.html">Here</a>
+    <h4>Left recursion due to nullable nonterminals</h4>
+    <a href="./parser_examples/left_recursion_nullable/index.html">Here</a>
+    </div>
+</div>
+
+<h2>Datalog examples</h2>
+<div class="examples-container">
+    <div class="example-box">
+    <h3>Ancestors</h3>
+    <p>The classic Datalog showcase example!</p> <p>The length of a query's trace varies according to e.g the query's nature or the facts included.</p>
+
+    <ul>
+        <li>With a <a href="./datalog_examples/ancestors_shortquery/index.html">short</a> trace</li>
+        <li><a href="./datalog_examples/ancestors_shortquery/index.html">Moderate</a>-length trace</li>
+        <li><a href="./datalog_examples/ancestors_shortquery/index.html">Long</a> trace</li>
+    </ul>
+    </div>
+
+    <div class="example-box">
+    <h3>Self Match</h3>
+    <p>A small <a href="./datalog_examples/self_match/index.html">example</a> to test Datalog programs where an atom contains the same variable more than once</p>
+    </div>
+
+    <div class="example-box">
+    <h3>Reverse same-generation</h3>
+    <p>From the book "Foundations of Databases"</p>
+    <p>Full version found <a href="./datalog_examples/rsg/index.html">here</a></p>
+    <p>Shorter trace version found <a href="./datalog_examples/rsg_abridged/index.html">here</a></p>
+    </div>
+
+    <div class="example-box">
+    <h3>Siblings</h3>
+    <p>Another classic <a href="./datalog_examples/rsg_abridged/index.html">example</a> from Logic programming</p>
+    </div>
+</div>
+</body>
+</html>

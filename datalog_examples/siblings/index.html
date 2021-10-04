@@ -1,0 +1,399 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>Takmela: Siblings Datalog Example</title>
+<link rel="stylesheet" href="../../common.css">
+<link rel="stylesheet" href="../../dom.css">
+<script src="../../dom.js"></script>
+</head>
+<body>
+
+<div class="topNav">
+<a href="../../index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1>Takmela: Siblings Datalog Example</h1>
+<p>Another classic example to showcase Logic Programming.</p>
+
+<span class="section">Program</span>
+<pre>
+parent("a", "b").
+parent("b", "c").
+parent("a", "d").
+parent("d", "e").
+
+sibling(X, Y):-
+    parent(P, X),
+    parent(P, Y),
+    X != Y
+    .
+</pre>
+<span class="section">Query</span>
+<pre>
+sibling(X, Y)
+</pre>
+
+<p>Hint: Hovering over a graph expands it</p>
+
+<div class="takmela-trace">
+<table>
+<tr><td colspan="2" class="iterationHeader">Call start rule
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace000.png"></td><td rowspan="2">
+<div><div class="step">#0: Called <span class="snippet">sibling(?, ?)</span> at the top level (will process)</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→•parent(P,X), parent(P,Y), X&lt;Y</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">parent(?, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(?, ?) → [a, b]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(?, ?) → [b, c]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(?, ?) → [a, d]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(?, ?) → [d, e]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="new-success">parent(?, ?) → [a, b]</span>
+<span class="new-success">parent(?, ?) → [b, c]</span>
+<span class="new-success">parent(?, ?) → [a, d]</span>
+<span class="new-success">parent(?, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 0
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(?, ?) → (a, b)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(?, ?) → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(?, ?) → (d, e)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(?, ?) → (a, d)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">parent(?, ?)</span> → <span class="snippet">sibling(X, Y)→parent(P,X)•parent(P,Y), X&lt;Y</span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace001.png"></td><td rowspan="2">
+<div><div class="step">#1: JoinS: <span class="snippet">parent(?, ?)  → [a, b]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P,X)•parent(P,Y), X&lt;Y</span><br>newVars: <span class="snippet">{P=a, X=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">b</span>)•parent(P|<span class="contVar">a</span>,Y), X|<span class="contVar">b</span>&lt;Y</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">parent(a, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(a, ?) → [a, b]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(a, ?) → [a, d]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="new-success">parent(a, ?) → [a, b]</span>
+<span class="new-success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace002.png"></td><td rowspan="2">
+<div><div class="step">#2: JoinS: <span class="snippet">parent(?, ?)  → [b, c]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P,X)•parent(P,Y), X&lt;Y</span><br>newVars: <span class="snippet">{P=b, X=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">b</span>,X|<span class="contVar">c</span>)•parent(P|<span class="contVar">b</span>,Y), X|<span class="contVar">c</span>&lt;Y</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">parent(b, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(b, ?) → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="new-success">parent(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace003.png"></td><td rowspan="2">
+<div><div class="step">#3: JoinS: <span class="snippet">parent(?, ?)  → [d, e]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P,X)•parent(P,Y), X&lt;Y</span><br>newVars: <span class="snippet">{P=d, X=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">d</span>,X|<span class="contVar">e</span>)•parent(P|<span class="contVar">d</span>,Y), X|<span class="contVar">e</span>&lt;Y</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">parent(d, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(d, ?) → [d, e]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="new-success">parent(d, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace004.png"></td><td rowspan="2">
+<div><div class="step">#4: JoinS: <span class="snippet">parent(?, ?)  → [a, d]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P,X)•parent(P,Y), X&lt;Y</span><br>newVars: <span class="snippet">{P=a, X=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">d</span>)•parent(P|<span class="contVar">a</span>,Y), X|<span class="contVar">d</span>&lt;Y</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">parent(a, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(a, ?) → [a, b]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">parent(a, ?) → [a, d]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="new-success">parent(a, ?) → [a, b]</span>
+<span class="new-success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 1
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(b, ?) → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(d, ?) → (d, e)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(a, ?) → (a, b)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">parent(a, ?) → (a, d)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">parent(b, ?)</span> → <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">b</span>,X|<span class="contVar">c</span>), parent(P|<span class="contVar">b</span>,Y)•X|<span class="contVar">c</span>&lt;Y</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">parent(d, ?)</span> → <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">d</span>,X|<span class="contVar">e</span>), parent(P|<span class="contVar">d</span>,Y)•X|<span class="contVar">e</span>&lt;Y</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">parent(a, ?)</span> → <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">d</span>), parent(P|<span class="contVar">a</span>,Y)•X|<span class="contVar">d</span>&lt;Y</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">parent(a, ?)</span> → <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">b</span>), parent(P|<span class="contVar">a</span>,Y)•X|<span class="contVar">b</span>&lt;Y</span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace005.png"></td><td rowspan="2">
+<div><div class="step">#5: JoinS: <span class="snippet">parent(b, ?)  → [b, c]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">b</span>,X|<span class="contVar">c</span>), parent(P|<span class="contVar">b</span>,Y)•X|<span class="contVar">c</span>&lt;Y</span><br>newVars: <span class="snippet">{Y=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">b</span>,X|<span class="contVar">c</span>), parent(P|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•X|<span class="contVar">c</span>&lt;Y|<span class="contVar">c</span></span></div>
+<div class="processingOp">
+Testing: <span class="snippet">X|<span class="contVar">c</span> &lt; Y|<span class="contVar">c</span></span>, Failed
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace006.png"></td><td rowspan="2">
+<div><div class="step">#6: JoinS: <span class="snippet">parent(d, ?)  → [d, e]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">d</span>,X|<span class="contVar">e</span>), parent(P|<span class="contVar">d</span>,Y)•X|<span class="contVar">e</span>&lt;Y</span><br>newVars: <span class="snippet">{Y=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">d</span>,X|<span class="contVar">e</span>), parent(P|<span class="contVar">d</span>,Y|<span class="contVar">e</span>)•X|<span class="contVar">e</span>&lt;Y|<span class="contVar">e</span></span></div>
+<div class="processingOp">
+Testing: <span class="snippet">X|<span class="contVar">e</span> &lt; Y|<span class="contVar">e</span></span>, Failed
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace007.png"></td><td rowspan="2">
+<div><div class="step">#7: JoinS: <span class="snippet">parent(a, ?)  → [a, b]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">d</span>), parent(P|<span class="contVar">a</span>,Y)•X|<span class="contVar">d</span>&lt;Y</span><br>newVars: <span class="snippet">{Y=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">d</span>), parent(P|<span class="contVar">a</span>,Y|<span class="contVar">b</span>)•X|<span class="contVar">d</span>&lt;Y|<span class="contVar">b</span></span></div>
+<div class="processingOp">
+Testing: <span class="snippet">X|<span class="contVar">d</span> &lt; Y|<span class="contVar">b</span></span>, Failed
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace008.png"></td><td rowspan="2">
+<div><div class="step">#8: JoinS: <span class="snippet">parent(a, ?)  → [a, b]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">b</span>), parent(P|<span class="contVar">a</span>,Y)•X|<span class="contVar">b</span>&lt;Y</span><br>newVars: <span class="snippet">{Y=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">b</span>), parent(P|<span class="contVar">a</span>,Y|<span class="contVar">b</span>)•X|<span class="contVar">b</span>&lt;Y|<span class="contVar">b</span></span></div>
+<div class="processingOp">
+Testing: <span class="snippet">X|<span class="contVar">b</span> &lt; Y|<span class="contVar">b</span></span>, Failed
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace009.png"></td><td rowspan="2">
+<div><div class="step">#9: JoinS: <span class="snippet">parent(a, ?)  → [a, d]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">d</span>), parent(P|<span class="contVar">a</span>,Y)•X|<span class="contVar">d</span>&lt;Y</span><br>newVars: <span class="snippet">{Y=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">d</span>), parent(P|<span class="contVar">a</span>,Y|<span class="contVar">d</span>)•X|<span class="contVar">d</span>&lt;Y|<span class="contVar">d</span></span></div>
+<div class="processingOp">
+Testing: <span class="snippet">X|<span class="contVar">d</span> &lt; Y|<span class="contVar">d</span></span>, Failed
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace010.png"></td><td rowspan="2">
+<div><div class="step">#10: JoinS: <span class="snippet">parent(a, ?)  → [a, d]</span> will resume cont: <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">b</span>), parent(P|<span class="contVar">a</span>,Y)•X|<span class="contVar">b</span>&lt;Y</span><br>newVars: <span class="snippet">{Y=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">sibling(?, ?)</span> codePos <span class="snippet">sibling(X, Y)→parent(P|<span class="contVar">a</span>,X|<span class="contVar">b</span>), parent(P|<span class="contVar">a</span>,Y|<span class="contVar">d</span>)•X|<span class="contVar">b</span>&lt;Y|<span class="contVar">d</span></span></div>
+<div class="processingOp">
+Testing: <span class="snippet">X|<span class="contVar">b</span> &lt; Y|<span class="contVar">d</span></span>, Succeeded
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">sibling(?, ?) → [b, d]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="new-success">sibling(?, ?) → [b, d]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 2
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">sibling(?, ?) → (b, d)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace011.png"></td><td rowspan="2">
+<div><div class="step">#11: JoinS: <span class="snippet">sibling(?, ?)  → [b, d]</span> will resume cont: <span class="snippet">Root(V0, V1)→sibling(V0,V1)•</span><br>newVars: <span class="snippet">{V0=b, V1=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">Root()</span> codePos <span class="snippet">Root(V0, V1)→sibling(V0|<span class="contVar">b</span>,V1|<span class="contVar">d</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">Root() → [b, d]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">parent(?, ?) → [a, b]</span>
+<span class="success">parent(?, ?) → [b, c]</span>
+<span class="success">parent(?, ?) → [a, d]</span>
+<span class="success">parent(?, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">parent(b, ?) → [b, c]</span>
+<span class="success">parent(d, ?) → [d, e]</span>
+<span class="success">parent(a, ?) → [a, b]</span>
+<span class="success">parent(a, ?) → [a, d]</span>
+<span class="success">sibling(?, ?) → [b, d]</span>
+<span class="new-success">Root() → [b, d]<span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 3
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root() → (b, d)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr><td>(No new calls or successes that can be further processed)</td></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 4
+  [Fixed point reached]</span></td></tr>
+</table>
+</div>
+
+    
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>Takmela: Parsing arithmetic expression example (1+2+3)</title>
+<link rel="stylesheet" href="../../common.css">
+<link rel="stylesheet" href="../../dom.css">
+<script src="../../dom.js"></script>
+</head>
+<body>
+
+<div class="topNav">
+<a href="../../index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1>Takmela: Parsing arithmetic expression example (1+2+3)</h1>
+<p>The next step in learning Takmela's algorithm, after tracing <a href="../arith_one_plus_two/index.html">1+2</a></p>
+<span class="section">Grammar</span>
+<pre>
+expr : expr '+' term 
+    | term ;
+
+term : 
+    NUM
+    ;
+    
+NUM: [0-9]+;
+
+WS skip: [ \r\n\t]*;
+</pre>
+<span class="section">Input</span>
+<pre>
+1+2+3
+</pre>
+<p class="traceHintMessage">Trace appears confusing? <a href="../../trace_legend.html">This</a> might help</p>
+
+<div class="takmela-trace">
+<table>
+<tr><td colspan="2" class="iterationHeader">Call start nonterminal </span></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace000.png"></td><td rowspan="2">
+<div><div class="step">#0: Called <span class="snippet">expr/0</span> at the top level (will process)</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr → • expr `+` term</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">expr/0</span> with Cont <span class="snippet">expr/0 ; expr →  expr• `+` term ; expr</span> [already processed]
+</div>
+</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr → • term</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">term/0</span> with Cont <span class="snippet">expr/0 ; expr →  term• ; expr</span> [will process]
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">term/0</span> codePos <span class="snippet">term → • NUM</span> inputPos <span class="snippet">0</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">1</span>, matched; inputPos now <span class="snippet">1</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">term/0 → 1</span>
+</div>
+</div>
+</div>
+</div>
+New continuations:<hr style="border:1px dotted black">
+<div><span class="snippet">term/0</span> → <span class="snippet">expr/0 ; expr →  term• ; expr</span></div>
+<div><span class="snippet">expr/0</span> → <span class="snippet">expr/0 ; expr →  expr• `+` term ; expr</span></div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="new-success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 0</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">term/0  → 1 <span class="forest"><span class="treeSep">木</span>term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">term/0</span> → <span class="snippet">expr/0 ; expr →  term• </span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">expr/0</span> → <span class="snippet">expr/0 ; expr →  expr• `+` term </span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace001.png"></td><td rowspan="2">
+<div><div class="step">#1: JoinS: <span class="snippet">term/0  → 1</span> will resume cont: <span class="snippet">expr/0 ; expr →  term• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr →  term•</span> inputPos <span class="snippet">1</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">expr/0 → 1</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 1</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">expr/0  → 1 <span class="forest"><span class="treeSep">木</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace002.png"></td><td rowspan="2">
+<div><div class="step">#2: JoinS: <span class="snippet">expr/0  → 1</span> will resume cont: <span class="snippet">expr/0 ; expr →  expr• `+` term </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr →  expr• `+` term</span> inputPos <span class="snippet">1</span></div>
+<div class="processingOp">
+Match <span class="snippet">+</span> to <span class="snippet">+</span>, matched; inputPos now <span class="snippet">2</span>
+</div>
+<div class="processingOp">
+Calling: <span class="snippet">term/2</span> with Cont <span class="snippet">expr/0 ; expr →  expr `+` term• ; expr(expr(term('1')), '+')</span> [will process]
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">term/2</span> codePos <span class="snippet">term → • NUM</span> inputPos <span class="snippet">2</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">2</span>, matched; inputPos now <span class="snippet">3</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">term/2 → 3</span>
+</div>
+</div>
+</div>
+</div>
+New continuations:<hr style="border:1px dotted black">
+<div><span class="snippet">term/2</span> → <span class="snippet">expr/0 ; expr →  expr `+` term• ; expr(expr(term('1')), '+')</span></div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace003.png"></td><td rowspan="2">
+<div><div class="step">#3: JoinS: <span class="snippet">expr/0  → 1</span> will resume cont: <span class="snippet">Root/0 ; Root →  expr• </span></div>
+<span class="cross">×</span>Didn't reach end of input, not a successful parse
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 2</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">term/2  → 3 <span class="forest"><span class="treeSep">木</span>term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">term/2</span> → <span class="snippet">expr/0 ; expr →  expr `+` term• </span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace004.png"></td><td rowspan="2">
+<div><div class="step">#4: JoinS: <span class="snippet">term/2  → 3</span> will resume cont: <span class="snippet">expr/0 ; expr →  expr `+` term• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr →  expr `+` term•</span> inputPos <span class="snippet">3</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">expr/0 → 3</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">expr/0 → 3, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 3</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">expr/0  → 3 <span class="forest"><span class="treeSep">木</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace005.png"></td><td rowspan="2">
+<div><div class="step">#5: JoinS: <span class="snippet">expr/0  → 3</span> will resume cont: <span class="snippet">expr/0 ; expr →  expr• `+` term </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr →  expr• `+` term</span> inputPos <span class="snippet">3</span></div>
+<div class="processingOp">
+Match <span class="snippet">+</span> to <span class="snippet">+</span>, matched; inputPos now <span class="snippet">4</span>
+</div>
+<div class="processingOp">
+Calling: <span class="snippet">term/4</span> with Cont <span class="snippet">expr/0 ; expr →  expr `+` term• ; expr(expr(expr(term('1')), '+', term('2')), '+')</span> [will process]
+<div class="processing" style="margin-left:20px;">
+<div class="processingHeader">Processing <span class="snippet">term/4</span> codePos <span class="snippet">term → • NUM</span> inputPos <span class="snippet">4</span></div>
+<div class="processingOp">
+Match <span class="snippet">NUM</span> to <span class="snippet">3</span>, matched; inputPos now <span class="snippet">5</span>
+</div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">term/4 → 5</span>
+</div>
+</div>
+</div>
+</div>
+New continuations:<hr style="border:1px dotted black">
+<div><span class="snippet">term/4</span> → <span class="snippet">expr/0 ; expr →  expr `+` term• ; expr(expr(expr(term('1')), '+', term('2')), '+')</span></div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 3, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">term/4 → 5, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'3'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace006.png"></td><td rowspan="2">
+<div><div class="step">#6: JoinS: <span class="snippet">expr/0  → 3</span> will resume cont: <span class="snippet">Root/0 ; Root →  expr• </span></div>
+<span class="cross">×</span>Didn't reach end of input, not a successful parse
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 3, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/4 → 5, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'3'<span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 4</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">term/4  → 5 <span class="forest"><span class="treeSep">木</span>term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'3'<span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">term/4</span> → <span class="snippet">expr/0 ; expr →  expr `+` term• </span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace007.png"></td><td rowspan="2">
+<div><div class="step">#7: JoinS: <span class="snippet">term/4  → 5</span> will resume cont: <span class="snippet">expr/0 ; expr →  expr `+` term• </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr →  expr `+` term•</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">expr/0 → 5</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 3, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/4 → 5, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'3'<span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">expr/0 → 5, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'2'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'3'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 5</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">expr/0  → 5 <span class="forest"><span class="treeSep">木</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'2'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'3'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace008.png"></td><td rowspan="2">
+<div><div class="step">#8: JoinS: <span class="snippet">expr/0  → 5</span> will resume cont: <span class="snippet">expr/0 ; expr →  expr• `+` term </span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">expr/0</span> codePos <span class="snippet">expr →  expr• `+` term</span> inputPos <span class="snippet">5</span></div>
+<div class="processingOp">
+Match <span class="snippet">`+`</span> to <span class="snippet">(eof)</span>, fail
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 3, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/4 → 5, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'3'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 5, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'2'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'3'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace009.png"></td><td rowspan="2">
+<div><div class="step">#9: JoinS: <span class="snippet">expr/0  → 5</span> will resume cont: <span class="snippet">Root/0 ; Root →  expr• </span></div>
+<span class="tick">✓</span>Reached end of input, successful parse!
+<tr><td class="successes-cell"><div class="successes">
+<span class="success">term/0 → 1, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'1'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 1, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'1'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/2 → 3, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'2'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 3, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'1'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'2'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="success">term/4 → 5, term<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>'3'<span class="close-rainbow-0">)</span></span></span>
+<span class="success">expr/0 → 5, expr<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'1'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'2'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>'3'<span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span>
+<span class="new-success">Root/0 → 5, Root<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'1'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'2'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'3'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span><span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 6</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root/0  → 5 <span class="forest"><span class="treeSep">木</span>Root<span class="rainbow-nodepth"><span class="open-rainbow-0">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-1">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>expr<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>term<span class="rainbow-nodepth"><span class="open-rainbow-4">(</span>'1'<span class="close-rainbow-4">)</span></span><span class="close-rainbow-3">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-3">(</span>'2'<span class="close-rainbow-3">)</span></span><span class="close-rainbow-2">)</span></span>,'+',term<span class="rainbow-nodepth"><span class="open-rainbow-2">(</span>'3'<span class="close-rainbow-2">)</span></span><span class="close-rainbow-1">)</span></span><span class="close-rainbow-0">)</span></span></span></span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr><td>(No new calls or successes that can be further processed)</td></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 7  [Fixed point reached]</span></td></tr>
+</table>
+</div>
+
+</body>
+</html>

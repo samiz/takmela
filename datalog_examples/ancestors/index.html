@@ -1,0 +1,1189 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>Takmela: Ancestors Datalog Example (long trace version)</title>
+<link rel="stylesheet" href="../../common.css">
+<link rel="stylesheet" href="../../dom.css">
+<script src="../../dom.js"></script>
+</head>
+<body>
+
+<div class="topNav">
+<a href="../../index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1>Ancestors Datalog Example (long trace version)</h1>
+<p>The classic example to showcase Logic Programming, running on Takmela/Datalog! The query in this example leads to a long trace and a complicated graph.</p>
+
+<p>All ancestors examples: <a href="../ancestors_shortquery/index.html">Short</a> / <a href="../ancestors_medium_query/index.html">Medium</a> / <a href="../ancestors/index.html">Longer</a> trace. (Note that the <i>fact set</i> is slightly different in each example)</p>
+
+<span class="section">Program</span>
+<pre>
+parent("a", "b").
+parent("b", "c").
+parent("a", "d").
+parent("d", "e").
+
+// All parents are ancestors
+ancestor(X, Y):- parent(X, Y).
+
+// An ancestor of an ancestor is also an ancestor
+ancestor(X, Y):- ancestor(X, Z), ancestor(Z, Y).
+</pre>
+<span class="section">Query</span>
+<pre>
+ancestor(X, c)
+</pre>
+<p>Tracing this query leads to a rather complicated graph, which is why in the actual trace we use <span class="snippet">'a'</span> to mean ancestor and <span class="snippet">'p'</span> to mean <span class="snippet">parent</span>.</p>
+<p class="traceHintMessage">Hint: Hovering over a graph expands it</p>
+<p class="traceHintMessage">Trace appears confusing? <a href="../../trace_legend.html">This</a> might help</p>
+
+<div class="takmela-trace">
+<table>
+<tr><td colspan="2" class="iterationHeader">Call start rule
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace000.png"></td><td rowspan="2">
+<div><div class="step">#0: Called <span class="snippet">a(?, c)</span> at the top level (will process)</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→•p(X,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(?, c)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(?, c) → [b, c]</span>
+</div>
+</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→•a(X,Z), a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(?, ?)</span> [will process]
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→•p(X,Y)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(?, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(?, ?) → [a, b]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(?, ?) → [b, c]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(?, ?) → [a, d]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(?, ?) → [d, e]</span>
+</div>
+</div>
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→•a(X,Z), a(Z,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(?, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="new-success">p(?, c) → [b, c]</span>
+<span class="new-success">p(?, ?) → [a, b]</span>
+<span class="new-success">p(?, ?) → [b, c]</span>
+<span class="new-success">p(?, ?) → [a, d]</span>
+<span class="new-success">p(?, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 0
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(?, ?) → (a, b)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(?, ?) → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(?, ?) → (d, e)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(?, ?) → (a, d)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(?, c) → (b, c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">p(?, ?)</span> → <span class="snippet">a(X, Y)→p(X,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(?, ?)</span> → <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(?, ?)</span> → <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">p(?, c)</span> → <span class="snippet">a(X, Y)→p(X,Y|<span class="contVar">c</span>)•</span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace001.png"></td><td rowspan="2">
+<div><div class="step">#1: JoinS: <span class="snippet">p(?, ?)  → [a, b]</span> will resume cont: <span class="snippet">a(X, Y)→p(X,Y)•</span><br>newVars: <span class="snippet">{X=a, Y=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">a</span>,Y|<span class="contVar">b</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, ?) → [a, b]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="new-success">a(?, ?) → [a, b]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace002.png"></td><td rowspan="2">
+<div><div class="step">#2: JoinS: <span class="snippet">p(?, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→p(X,Y)•</span><br>newVars: <span class="snippet">{X=b, Y=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, ?) → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="new-success">a(?, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace003.png"></td><td rowspan="2">
+<div><div class="step">#3: JoinS: <span class="snippet">p(?, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→p(X,Y)•</span><br>newVars: <span class="snippet">{X=d, Y=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">d</span>,Y|<span class="contVar">e</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, ?) → [d, e]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="new-success">a(?, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace004.png"></td><td rowspan="2">
+<div><div class="step">#4: JoinS: <span class="snippet">p(?, ?)  → [a, d]</span> will resume cont: <span class="snippet">a(X, Y)→p(X,Y)•</span><br>newVars: <span class="snippet">{X=a, Y=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">a</span>,Y|<span class="contVar">d</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, ?) → [a, d]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="new-success">a(?, ?) → [a, d]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace005.png"></td><td rowspan="2">
+<div><div class="step">#5: JoinS: <span class="snippet">p(?, c)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→p(X,Y|<span class="contVar">c</span>)•</span><br>newVars: <span class="snippet">{X=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, c) → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="new-success">a(?, c) → [b, c]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 1
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, ?) → (a, b)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, ?) → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, ?) → (d, e)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, ?) → (a, d)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, c) → (b, c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace006.png"></td><td rowspan="2">
+<div><div class="step">#6: JoinS: <span class="snippet">a(?, ?)  → [a, b]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{X=a, Z=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>)•a(Z|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(b, c)</span> [will process]
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, c)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(b, c)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(b, c) → [b, c]</span>
+</div>
+</div>
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, c)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">b</span>,Z), a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(b, ?)</span> [will process]
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, ?)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">b</span>,Y)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(b, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(b, ?) → [b, c]</span>
+</div>
+</div>
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, ?)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">b</span>,Z), a(Z,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(b, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="new-success">p(b, c) → [b, c]</span>
+<span class="new-success">p(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace007.png"></td><td rowspan="2">
+<div><div class="step">#7: JoinS: <span class="snippet">a(?, ?)  → [a, b]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{X=a, Z=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>)•a(Z|<span class="contVar">b</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(b, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace008.png"></td><td rowspan="2">
+<div><div class="step">#8: JoinS: <span class="snippet">a(?, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{X=b, Z=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>)•a(Z|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, c)</span> [will process]
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(c, c)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(c, c)</span>
+</div>
+</div>
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(c, c)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">c</span>,Z), a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, ?)</span> [will process]
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(c, ?)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">c</span>,Y)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(c, ?)</span>
+</div>
+</div>
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(c, ?)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">c</span>,Z), a(Z,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace009.png"></td><td rowspan="2">
+<div><div class="step">#9: JoinS: <span class="snippet">a(?, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{X=b, Z=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>)•a(Z|<span class="contVar">c</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace010.png"></td><td rowspan="2">
+<div><div class="step">#10: JoinS: <span class="snippet">a(?, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{X=d, Z=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>)•a(Z|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, c)</span> [will process]
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(e, c)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(e, c)</span>
+</div>
+</div>
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(e, c)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">e</span>,Z), a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, ?)</span> [will process]
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(e, ?)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">e</span>,Y)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(e, ?)</span>
+</div>
+</div>
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(e, ?)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">e</span>,Z), a(Z,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace011.png"></td><td rowspan="2">
+<div><div class="step">#11: JoinS: <span class="snippet">a(?, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{X=d, Z=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>)•a(Z|<span class="contVar">e</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace012.png"></td><td rowspan="2">
+<div><div class="step">#12: JoinS: <span class="snippet">a(?, ?)  → [a, d]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{X=a, Z=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">d</span>)•a(Z|<span class="contVar">d</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(d, c)</span> [will process]
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, c)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">d</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(d, c)</span>
+</div>
+</div>
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, c)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">d</span>,Z), a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(d, ?)</span> [will process]
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, ?)</span> codePos <span class="snippet">a(X, Y)→•p(X|<span class="contVar">d</span>,Y)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">p(d, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">p(d, ?) → [d, e]</span>
+</div>
+</div>
+<div class="processing" style="margin-left:30px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, ?)</span> codePos <span class="snippet">a(X, Y)→•a(X|<span class="contVar">d</span>,Z), a(Z,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(d, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="new-success">p(d, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace013.png"></td><td rowspan="2">
+<div><div class="step">#13: JoinS: <span class="snippet">a(?, ?)  → [a, d]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{X=a, Z=d}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">d</span>)•a(Z|<span class="contVar">d</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(d, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace014.png"></td><td rowspan="2">
+<div><div class="step">#14: JoinS: <span class="snippet">a(?, c)  → [b, c]</span> will resume cont: <span class="snippet">Root(V0, "c")→a(V0,"c")•</span><br>newVars: <span class="snippet">{V0=b}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">Root()</span> codePos <span class="snippet">Root(V0, "c")→a(V0|<span class="contVar">b</span>,"c")•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">Root() → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="new-success">Root() → [b, c]<span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 2
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(b, ?) → (b, c)</span></div>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root() → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(d, ?) → (d, e)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">p(b, c) → (b, c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>), a(Z|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(b, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>), a(Z|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(b, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z)•a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(b, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>), a(Z|<span class="contVar">b</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(b, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z)•a(Z,Y)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>), a(Z|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(d, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">d</span>), a(Z|<span class="contVar">d</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(d, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z)•a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(d, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z)•a(Z,Y)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(d, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">d</span>), a(Z|<span class="contVar">d</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">c</span>,Z)•a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>), a(Z|<span class="contVar">c</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">c</span>,Z)•a(Z,Y)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">e</span>,Z)•a(Z,Y|<span class="contVar">c</span>)</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>), a(Z|<span class="contVar">e</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">e</span>,Z)•a(Z,Y)</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">p(b, c)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">p(d, c)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">d</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">p(c, c)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">p(c, ?)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">c</span>,Y)•</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">p(b, ?)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">p(e, c)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">p(e, ?)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">e</span>,Y)•</span></div>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">p(d, ?)</span> → <span class="snippet">a(X, Y)→p(X|<span class="contVar">d</span>,Y)•</span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace015.png"></td><td rowspan="2">
+<div><div class="step">#15: JoinS: <span class="snippet">p(b, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y)•</span><br>newVars: <span class="snippet">{Y=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, ?)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(b, ?) → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="new-success">a(b, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace016.png"></td><td rowspan="2">
+<div><div class="step">#16: JoinS: <span class="snippet">p(d, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→p(X|<span class="contVar">d</span>,Y)•</span><br>newVars: <span class="snippet">{Y=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, ?)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">d</span>,Y|<span class="contVar">e</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(d, ?) → [d, e]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="new-success">a(d, ?) → [d, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace017.png"></td><td rowspan="2">
+<div><div class="step">#17: JoinS: <span class="snippet">p(b, c)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, c)</span> codePos <span class="snippet">a(X, Y)→p(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(b, c) → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="new-success">a(b, c) → [b, c]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 3
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(b, c) → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(b, ?) → (b, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(d, ?) → (d, e)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace018.png"></td><td rowspan="2">
+<div><div class="step">#18: JoinS: <span class="snippet">a(b, c)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>), a(Z|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>), a(Z|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, c) → [a, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="new-success">a(?, c) → [a, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace019.png"></td><td rowspan="2">
+<div><div class="step">#19: JoinS: <span class="snippet">a(b, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{Z=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>)•a(Z|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, c)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace020.png"></td><td rowspan="2">
+<div><div class="step">#20: JoinS: <span class="snippet">a(b, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>), a(Z|<span class="contVar">b</span>,Y)•</span><br>newVars: <span class="snippet">{Y=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">b</span>), a(Z|<span class="contVar">b</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, ?) → [a, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="new-success">a(?, ?) → [a, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace021.png"></td><td rowspan="2">
+<div><div class="step">#21: JoinS: <span class="snippet">a(b, ?)  → [b, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{Z=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(b, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>)•a(Z|<span class="contVar">c</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace022.png"></td><td rowspan="2">
+<div><div class="step">#22: JoinS: <span class="snippet">a(d, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{Z=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>)•a(Z|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, c)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace023.png"></td><td rowspan="2">
+<div><div class="step">#23: JoinS: <span class="snippet">a(d, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{Z=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(d, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>)•a(Z|<span class="contVar">e</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace024.png"></td><td rowspan="2">
+<div><div class="step">#24: JoinS: <span class="snippet">a(d, ?)  → [d, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">d</span>), a(Z|<span class="contVar">d</span>,Y)•</span><br>newVars: <span class="snippet">{Y=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">d</span>), a(Z|<span class="contVar">d</span>,Y|<span class="contVar">e</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">a(?, ?) → [a, e]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+<span class="new-success">a(?, ?) → [a, e]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 4
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, ?) → (a, c)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, ?) → (a, e)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">a(?, c) → (a, c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>), a(Z|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>), a(Z|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">b</span>,Z|<span class="contVar">c</span>), a(Z|<span class="contVar">c</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">d</span>,Z|<span class="contVar">e</span>), a(Z|<span class="contVar">e</span>,Y)•</span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace025.png"></td><td rowspan="2">
+<div><div class="step">#25: JoinS: <span class="snippet">a(?, ?)  → [a, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{X=a, Z=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">c</span>)•a(Z|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, c)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+<span class="success">a(?, ?) → [a, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace026.png"></td><td rowspan="2">
+<div><div class="step">#26: JoinS: <span class="snippet">a(?, ?)  → [a, c]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{X=a, Z=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">c</span>)•a(Z|<span class="contVar">c</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(c, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+<span class="success">a(?, ?) → [a, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace027.png"></td><td rowspan="2">
+<div><div class="step">#27: JoinS: <span class="snippet">a(?, ?)  → [a, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y|<span class="contVar">c</span>)</span><br>newVars: <span class="snippet">{X=a, Z=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, c)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">e</span>)•a(Z|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, c)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+<span class="success">a(?, ?) → [a, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace028.png"></td><td rowspan="2">
+<div><div class="step">#28: JoinS: <span class="snippet">a(?, ?)  → [a, e]</span> will resume cont: <span class="snippet">a(X, Y)→a(X,Z)•a(Z,Y)</span><br>newVars: <span class="snippet">{X=a, Z=e}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">a(?, ?)</span> codePos <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">e</span>)•a(Z|<span class="contVar">e</span>,Y)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">a(e, ?)</span> [already processed]
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+<span class="success">a(?, ?) → [a, e]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace029.png"></td><td rowspan="2">
+<div><div class="step">#29: JoinS: <span class="snippet">a(?, c)  → [a, c]</span> will resume cont: <span class="snippet">Root(V0, "c")→a(V0,"c")•</span><br>newVars: <span class="snippet">{V0=a}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">Root()</span> codePos <span class="snippet">Root(V0, "c")→a(V0|<span class="contVar">a</span>,"c")•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">Root() → [a, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">p(?, c) → [b, c]</span>
+<span class="success">p(?, ?) → [a, b]</span>
+<span class="success">p(?, ?) → [b, c]</span>
+<span class="success">p(?, ?) → [a, d]</span>
+<span class="success">p(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, b]</span>
+<span class="success">a(?, ?) → [b, c]</span>
+<span class="success">a(?, ?) → [d, e]</span>
+<span class="success">a(?, ?) → [a, d]</span>
+<span class="success">a(?, c) → [b, c]</span>
+<span class="success">p(b, c) → [b, c]</span>
+<span class="success">p(b, ?) → [b, c]</span>
+<span class="success">p(d, ?) → [d, e]</span>
+<span class="success">Root() → [b, c]<span class="tick">✓</span></span>
+<span class="success">a(b, ?) → [b, c]</span>
+<span class="success">a(d, ?) → [d, e]</span>
+<span class="success">a(b, c) → [b, c]</span>
+<span class="success">a(?, c) → [a, c]</span>
+<span class="success">a(?, ?) → [a, c]</span>
+<span class="success">a(?, ?) → [a, e]</span>
+<span class="new-success">Root() → [a, c]<span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 5
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root() → (a, c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">c</span>), a(Z|<span class="contVar">c</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, c)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">e</span>), a(Z|<span class="contVar">e</span>,Y|<span class="contVar">c</span>)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(c, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">c</span>), a(Z|<span class="contVar">c</span>,Y)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">a(e, ?)</span> → <span class="snippet">a(X, Y)→a(X|<span class="contVar">a</span>,Z|<span class="contVar">e</span>), a(Z|<span class="contVar">e</span>,Y)•</span></div>
+</td></tr></table></td></tr>
+<tr><td>(No new calls or successes that can be further processed)</td></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 6
+  [Fixed point reached]</span></td></tr>
+</table>
+</div>
+
+    
+</body>
+</html>

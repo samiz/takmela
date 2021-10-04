@@ -1,0 +1,409 @@
+<!DOCTYPE html">
+<html><head><meta charset="utf-8"><title>Takmela: Self-matching variable Datalog Example</title>
+<link rel="stylesheet" href="../../common.css">
+<link rel="stylesheet" href="../../dom.css">
+<script src="../../dom.js"></script>
+</head>
+<body>
+
+<div class="topNav">
+<a href="../../index.html">Main Article</a><a href="../../examples_toc.html">Examples TOC</a>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1>Takmela: Self-matching variable Datalog Example</h1>
+<p>Every new Datalog interpreter should be tested with a program that contains an atom like <span class="snippet">p(X, X, Y)</span> where a variable occurs more than once, thus having to match an earlier occurrence of itself.</p>
+
+<span class="section">Program</span>
+<pre>
+buys("a", "a", "noodles").
+buys("a", "b", "watch").
+
+buys("b", "a", "socks").
+buys("b", "c", "gloves").
+
+buys("c", "c", "suit").
+
+
+selfBuys(X):- buys(X, X, Something).
+
+likes(X, Y):- buys(X, Y, Something).
+
+selfLikes(X):- likes(X, X).
+</pre>
+<span class="section">Query</span>
+<pre>
+selfLikes(X)
+</pre>
+
+<p>Hint: Hovering over a graph expands it</p>
+
+<div class="takmela-trace">
+<table>
+<tr><td colspan="2" class="iterationHeader">Call start rule
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace000.png"></td><td rowspan="2">
+<div><div class="step">#0: Called <span class="snippet">selfLikes(?)</span> at the top level (will process)</div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">selfLikes(?)</span> codePos <span class="snippet">selfLikes(X)→•likes(X,X)</span></div>
+<div class="processingOp">
+Calling: <span class="snippet">likes(?, ?)</span> [will process]
+<div class="processing" style="margin-left:15px;">
+<div class="processingHeader">Processing <span class="snippet">likes(?, ?)</span> codePos <span class="snippet">likes(X, Y)→•buys(X,Y,Something)</span></div>
+<div class="processingOp">
+Calling fact: <span class="snippet">buys(?, ?, ?)</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">buys(?, ?, ?) → [a, a, noodles]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">buys(?, ?, ?) → [a, b, watch]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">buys(?, ?, ?) → [b, a, socks]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">buys(?, ?, ?) → [b, c, gloves]</span>
+</div>
+<div class="processingOp">
+Found fact: <span class="snippet newItem">buys(?, ?, ?) → [c, c, suit]</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="new-success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="new-success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="new-success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="new-success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="new-success">buys(?, ?, ?) → [c, c, suit]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 0
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">buys(?, ?, ?) → (a, b, watch)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">buys(?, ?, ?) → (b, c, gloves)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">buys(?, ?, ?) → (b, a, socks)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">buys(?, ?, ?) → (a, a, noodles)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">buys(?, ?, ?) → (c, c, suit)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+<div>
+<span class="usedNewCall">S⤚</span>
+<span class="snippet">buys(?, ?, ?)</span> → <span class="snippet">likes(X, Y)→buys(X,Y,Something)•</span></div>
+<div>
+<span class="idleNewCall">nJ</span>
+<span class="snippet">likes(?, ?)</span> → <span class="snippet">selfLikes(X)→likes(X,X)•</span></div>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace001.png"></td><td rowspan="2">
+<div><div class="step">#1: JoinS: <span class="snippet">buys(?, ?, ?)  → [a, b, watch]</span> will resume cont: <span class="snippet">likes(X, Y)→buys(X,Y,Something)•</span><br>newVars: <span class="snippet">{X=a, Y=b, Something=watch}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">likes(?, ?)</span> codePos <span class="snippet">likes(X, Y)→buys(X|<span class="contVar">a</span>,Y|<span class="contVar">b</span>,Something|<span class="contVar">watch</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">likes(?, ?) → [a, b]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="new-success">likes(?, ?) → [a, b]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace002.png"></td><td rowspan="2">
+<div><div class="step">#2: JoinS: <span class="snippet">buys(?, ?, ?)  → [b, c, gloves]</span> will resume cont: <span class="snippet">likes(X, Y)→buys(X,Y,Something)•</span><br>newVars: <span class="snippet">{X=b, Y=c, Something=gloves}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">likes(?, ?)</span> codePos <span class="snippet">likes(X, Y)→buys(X|<span class="contVar">b</span>,Y|<span class="contVar">c</span>,Something|<span class="contVar">gloves</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">likes(?, ?) → [b, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="new-success">likes(?, ?) → [b, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace003.png"></td><td rowspan="2">
+<div><div class="step">#3: JoinS: <span class="snippet">buys(?, ?, ?)  → [b, a, socks]</span> will resume cont: <span class="snippet">likes(X, Y)→buys(X,Y,Something)•</span><br>newVars: <span class="snippet">{X=b, Y=a, Something=socks}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">likes(?, ?)</span> codePos <span class="snippet">likes(X, Y)→buys(X|<span class="contVar">b</span>,Y|<span class="contVar">a</span>,Something|<span class="contVar">socks</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">likes(?, ?) → [b, a]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="new-success">likes(?, ?) → [b, a]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace004.png"></td><td rowspan="2">
+<div><div class="step">#4: JoinS: <span class="snippet">buys(?, ?, ?)  → [a, a, noodles]</span> will resume cont: <span class="snippet">likes(X, Y)→buys(X,Y,Something)•</span><br>newVars: <span class="snippet">{X=a, Y=a, Something=noodles}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">likes(?, ?)</span> codePos <span class="snippet">likes(X, Y)→buys(X|<span class="contVar">a</span>,Y|<span class="contVar">a</span>,Something|<span class="contVar">noodles</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">likes(?, ?) → [a, a]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="new-success">likes(?, ?) → [a, a]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace005.png"></td><td rowspan="2">
+<div><div class="step">#5: JoinS: <span class="snippet">buys(?, ?, ?)  → [c, c, suit]</span> will resume cont: <span class="snippet">likes(X, Y)→buys(X,Y,Something)•</span><br>newVars: <span class="snippet">{X=c, Y=c, Something=suit}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">likes(?, ?)</span> codePos <span class="snippet">likes(X, Y)→buys(X|<span class="contVar">c</span>,Y|<span class="contVar">c</span>,Something|<span class="contVar">suit</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">likes(?, ?) → [c, c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="new-success">likes(?, ?) → [c, c]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 1
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="failedMatchSuccess">F</span>
+<span class="success">likes(?, ?) → (b, a)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">likes(?, ?) → (a, a)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">likes(?, ?) → (c, c)</span></div>
+<div>
+<span class="failedMatchSuccess">F</span>
+<span class="success">likes(?, ?) → (a, b)</span></div>
+<div>
+<span class="failedMatchSuccess">F</span>
+<span class="success">likes(?, ?) → (b, c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace006.png"></td><td rowspan="2">
+<div><div class="step">#6: JoinS: <span class="snippet">likes(?, ?)  → [b, a]</span> and cont: <span class="snippet">selfLikes(X)→likes(X,X)•</span><br> failed to bind variables</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace007.png"></td><td rowspan="2">
+<div><div class="step">#7: JoinS: <span class="snippet">likes(?, ?)  → [a, a]</span> will resume cont: <span class="snippet">selfLikes(X)→likes(X,X)•</span><br>newVars: <span class="snippet">{X=a}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">selfLikes(?)</span> codePos <span class="snippet">selfLikes(X)→likes(X|<span class="contVar">a</span>,X|<span class="contVar">a</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">selfLikes(?) → [a]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+<span class="new-success">selfLikes(?) → [a]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace008.png"></td><td rowspan="2">
+<div><div class="step">#8: JoinS: <span class="snippet">likes(?, ?)  → [c, c]</span> will resume cont: <span class="snippet">selfLikes(X)→likes(X,X)•</span><br>newVars: <span class="snippet">{X=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">selfLikes(?)</span> codePos <span class="snippet">selfLikes(X)→likes(X|<span class="contVar">c</span>,X|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">selfLikes(?) → [c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+<span class="success">selfLikes(?) → [a]</span>
+<span class="new-success">selfLikes(?) → [c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace009.png"></td><td rowspan="2">
+<div><div class="step">#9: JoinS: <span class="snippet">likes(?, ?)  → [a, b]</span> and cont: <span class="snippet">selfLikes(X)→likes(X,X)•</span><br> failed to bind variables</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+<span class="success">selfLikes(?) → [a]</span>
+<span class="success">selfLikes(?) → [c]</span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace010.png"></td><td rowspan="2">
+<div><div class="step">#10: JoinS: <span class="snippet">likes(?, ?)  → [b, c]</span> and cont: <span class="snippet">selfLikes(X)→likes(X,X)•</span><br> failed to bind variables</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+<span class="success">selfLikes(?) → [a]</span>
+<span class="success">selfLikes(?) → [c]</span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 2
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">selfLikes(?) → (a)</span></div>
+<div>
+<span class="activeSuccess">jS</span>
+<span class="success">selfLikes(?) → (c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr class="step-tr first-step-tr"><td><img class="graph" src="trace011.png"></td><td rowspan="2">
+<div><div class="step">#11: JoinS: <span class="snippet">selfLikes(?)  → [a]</span> will resume cont: <span class="snippet">Root(V0)→selfLikes(V0)•</span><br>newVars: <span class="snippet">{V0=a}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">Root()</span> codePos <span class="snippet">Root(V0)→selfLikes(V0|<span class="contVar">a</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">Root() → [a]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+<span class="success">selfLikes(?) → [a]</span>
+<span class="success">selfLikes(?) → [c]</span>
+<span class="new-success">Root() → [a]<span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr class="step-tr "><td><img class="graph" src="trace012.png"></td><td rowspan="2">
+<div><div class="step">#12: JoinS: <span class="snippet">selfLikes(?)  → [c]</span> will resume cont: <span class="snippet">Root(V0)→selfLikes(V0)•</span><br>newVars: <span class="snippet">{V0=c}</span></div>
+<div class="processing" style="margin-left:0px;">
+<div class="processingHeader">Processing <span class="snippet">Root()</span> codePos <span class="snippet">Root(V0)→selfLikes(V0|<span class="contVar">c</span>)•</span></div>
+<div class="processingOp">
+Reached end of rule, success! <span class="snippet newItem">Root() → [c]</span>
+</div>
+</div>
+</div>
+</td>
+<tr><td class="successes-cell"><div class="successes ">
+<span class="success">buys(?, ?, ?) → [a, a, noodles]</span>
+<span class="success">buys(?, ?, ?) → [a, b, watch]</span>
+<span class="success">buys(?, ?, ?) → [b, a, socks]</span>
+<span class="success">buys(?, ?, ?) → [b, c, gloves]</span>
+<span class="success">buys(?, ?, ?) → [c, c, suit]</span>
+<span class="success">likes(?, ?) → [a, b]</span>
+<span class="success">likes(?, ?) → [b, c]</span>
+<span class="success">likes(?, ?) → [b, a]</span>
+<span class="success">likes(?, ?) → [a, a]</span>
+<span class="success">likes(?, ?) → [c, c]</span>
+<span class="success">selfLikes(?) → [a]</span>
+<span class="success">selfLikes(?) → [c]</span>
+<span class="success">Root() → [a]<span class="tick">✓</span></span>
+<span class="new-success">Root() → [c]<span class="tick">✓</span></span>
+</div></td></tr></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 3
+</span></td></tr>
+<tr><td colspan="2"><table width="100%"><tr><td width="40%"><span class="worklistHeader">Worklist - successes</span>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root() → (a)</span></div>
+<div>
+<span class="idleSuccess">nJ</span>
+<span class="success">Root() → (c)</span></div>
+</td><td><span class="worklistHeader">Worklist - continuations</span>
+</td></tr></table></td></tr>
+<tr><td>(No new calls or successes that can be further processed)</td></tr>
+<tr><td colspan="2" class="iterationHeader">Iteration 4
+  [Fixed point reached]</span></td></tr>
+</table>
+</div>
+
+    
+</body>
+</html>
